@@ -1,27 +1,29 @@
 // Write your helper functions here!
 require('isomorphic-fetch');
 
+
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
-    // Here is the HTML formatting for our mission target div.
-    /*
+    let div = document.getElementById("missionTarget");
+    div.innerHTML = `
                  <h2>Mission Destination</h2>
                  <ol>
-                     <li>Name: </li>
-                     <li>Diameter: </li>
+                     <li>Name: ${name}</li>
+                     <li>Diameter: ${diameter}</li>
                      <li>Star: ${star}</li>
-                     <li>Distance from Earth: </li>
-                     <li>Number of Moons: </li>
+                     <li>Distance from Earth: ${distance}</li>
+                     <li>Number of Moons: ${moons}</li>
                  </ol>
-                 <img src="">
-    */
+                 <img src="${imageUrl}">
+                 `;
 }
 
 function validateInput(testInput) {
-    if (testInput === '') {
+    let numberInput = Number(testInput);
+    if (numberInput === '') {
         return 'empty';
-    } else if (isNan(testInput)) {
+    } else if (isNaN(numberInput)) {
         return 'not a number'
-    } else if (isNan(testInput) === false) {
+    } else if (isNaN(numberInput) === false) {
         return 'is a number'
     } else {
         return 'invalid input'
@@ -65,14 +67,23 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 }
 
 async function myFetch() {
-    let planetsReturned;
+    let planetsFetched;
 
-    planetsReturned = await fetch().then(function(response) {});
+    await fetch(`https://handlers.education.launchcode.org/static/planets.json`).then(function(response) {
+        if (response.status != 200) {
+            throw new Error(`Bad response`)
+        } else {
+            planetsFetched = response.json();
+        }
+    });
 
-    return planetsReturned;
+    return planetsFetched;
 }
 
-function pickPlanet(planets) {}
+function pickPlanet(planets) {
+    let randomIndex = Math.floor(Math.random() * 5)
+    return planets[randomIndex];
+}
 
 module.exports.addDestinationInfo = addDestinationInfo;
 module.exports.validateInput = validateInput;
